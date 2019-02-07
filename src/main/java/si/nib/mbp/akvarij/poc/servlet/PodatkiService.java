@@ -22,7 +22,7 @@ import si.nib.mbp.akvarij.poc.pojo.PodatkiJson;
 @Path("/podatki")
 public class PodatkiService extends DaoDbConnection {
     static final Logger logger = Logger.getLogger(PodatkiService.class.getName());
-
+/*
     @GET
     @Path("/tempsla")
     @Produces({MediaType.APPLICATION_JSON})
@@ -34,7 +34,7 @@ public class PodatkiService extends DaoDbConnection {
         Statement st = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        String sql = "select temp,sal,dat_vno from met_meritve order by dat_vno desc limit 30";
+        String sql = null; //"select temp,sal,dat_vno from met_meritve order by dat_vno desc limit 30";
 
         ArrayList<PodatkiJson> podatki = new ArrayList<PodatkiJson>();
 
@@ -93,7 +93,7 @@ public class PodatkiService extends DaoDbConnection {
         return podatki;
 
     }
-
+*/
     @GET
     @Path("/tempslajson")
     @Produces(MediaType.APPLICATION_JSON)
@@ -171,7 +171,7 @@ public class PodatkiService extends DaoDbConnection {
         return gson.toJson(podatki);
 
     }
-
+/*
     @GET
     @Path("/tempslaxml")
     @Produces(MediaType.APPLICATION_XML)
@@ -219,6 +219,7 @@ public class PodatkiService extends DaoDbConnection {
         return podatki;
 
     }
+*/
 
     private Connection getConnection() throws NamingException, SQLException {
         if (!connect()) {

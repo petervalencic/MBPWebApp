@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class DaoDbConnection {
+
     final String JAVA_DB_CONTEXT = "java:comp/env";
     final String JNDI_NAME = "jdbc/AKVARIJ";
 
@@ -20,10 +21,16 @@ public abstract class DaoDbConnection {
 
     protected boolean connect() {
         try {
+            /*
             InitialContext initialContext = new InitialContext();
             Context envContext = (Context) initialContext.lookup(JAVA_DB_CONTEXT);
             DataSource datasource = (DataSource) envContext.lookup(JNDI_NAME);
-            connection = datasource.getConnection();
+             */
+            Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            DataSource ds = (DataSource) envContext.lookup(JNDI_NAME);
+            connection = ds.getConnection();
+           
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed establishing DB connection", e);
         }

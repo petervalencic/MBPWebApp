@@ -13,7 +13,7 @@ p	{text-indent:20px;
 </style>
 </head>
 <body bgcolor = "#ffffcc" text = "#000000">
-<h1>Hello, World!</h1>
+<h1>Pozdravljeni...</h1>
 
 
 </body>

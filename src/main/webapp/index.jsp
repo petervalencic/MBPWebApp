@@ -1,13 +1,13 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 
-<jsp:useBean id="formaBean" class="si.nib.mbp.akvarij.poc.pojo.FormaBean" scope="session">
-</jsp:useBean>
+<jsp:useBean id="formaBean" class="si.nib.mbp.akvarij.poc.pojo.FormaBean" scope="session"/>
+
 
 <%
     String id = request.getParameter("id");
     if (id == null) {
-        id = "null";
+        id = "1";
     }
 %>
 
@@ -15,13 +15,10 @@
     <HEAD>
         <TITLE>FPP/NIB MBP - prikaz meritev</TITLE>  
         <META HTTP-EQUIV="Content-Type"  CONTENT="text/html; charset=UTF-8"/>
-        <LINK REL="stylesheet" TYPE="text/css" HREF="./css/style.css" TITLE="Default">
+        <LINK REL="stylesheet" type="text/css" href="./css/style.css" TITLE="Default">
 
-        <link rel="icon" href="favicon.ico" type="image/x-icon">
-        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="./css/jquery.datetimepicker.css"/>
 
         <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
         <script src="https://www.amcharts.com/lib/3/serial.js"></script>
@@ -38,7 +35,7 @@
                 "theme": "light",
 
                 "dataLoader": {
-                    "url": "rest/podatki/tempslajson?datumOd=${formaBean.datumOd}:00&datumDo=${formaBean.datumDo}:00",
+                    "url": "./rest/podatki/tempslajson?datumOd=${formaBean.datumOd}:00&datumDo=${formaBean.datumDo}:00",
                     "format": "json"
                 },
                 "valueAxes": [{
@@ -90,7 +87,7 @@
                 "theme": "light",
 
                 "dataLoader": {
-                    "url": "rest/podatki/tempslajson?datumOd=${formaBean.datumOd}:00&datumDo=${formaBean.datumDo}:00",
+                    "url": "./rest/podatki/tempslajson?datumOd=${formaBean.datumOd}:00&datumDo=${formaBean.datumDo}:00",
                     "format": "json"
                 },
                 "valueAxes": [{
@@ -143,7 +140,7 @@
     </HEAD>
 
     <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-        <form id="form" action="FormServlet" method="post">
+        <form id="form" action="./FormServlet" method="post">
             <table style="margin: 0 0 0 0;" border="0" cellpadding="0" cellspacing="0" width="100%">
 
                 <tr height ="50">
@@ -214,13 +211,19 @@
                                                                                     <td>
                                                                                         Datum od:
                                                                                     </td>
-                                                                                    <td align="right"><input id="datumod" type="datetime-local" style="width: 200;" name="datumOd" value="${formaBean.datumOd}"/></td>
+                                                                                    <td align="right">
+                                                                                        <input id="datumod" type="text" name="datumOd" value="${formaBean.datumOd}">
+                                                                                       <!-- <input id="datumod" type="datetime-local" style="width: 200;" name="datumOd" value="${formaBean.datumOd}"/> -->
+                                                                                    </td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>
                                                                                         Datum do:
                                                                                     </td>
-                                                                                    <td align="right"><input id="datumdo" type="datetime-local" style="width: 200;" name="datumDo" value="${formaBean.datumDo}"/></td>
+                                                                                    <td align="right">
+                                                                                        <input id="datumdo" type="text" name="datumDo" value="${formaBean.datumDo}">
+                                                                                      <!--  <input id="datumdo" type="datetime-local" style="width: 200;" name="datumDo" value="${formaBean.datumDo}"/> -->
+                                                                                    </td>
 
                                                                                 </tr>
 
@@ -274,7 +277,6 @@
                                                                                 </td>
                                                                             </tr>
                                                                             <% } %>
-
                                                                         </table>
                                                                     </td>
                                                                 </tr>
@@ -283,19 +285,21 @@
 
                                                     </td>
                                                 </tr>
-
-
-
                                                 <% if (id.equalsIgnoreCase("1") | id.equalsIgnoreCase("null")) { %>
-
-
                                                 <% }%>
-
                                                 </table>
                                                 </form>
-
                                                 </body>
+                                                 <script src="./build/jquery.datetimepicker.full.min.js"></script>
                                                 <script>
+                                                    $.datetimepicker.setLocale('sl');
+                                                    jQuery('#datumod').datetimepicker({
+                                                         format:'Y-m-d H:i'
+                                                    });
+                                                    jQuery('#datumdo').datetimepicker({
+                                                         format:'Y-m-d H:i'
+                                                    });
+                                                  
                                                     var d1;
                                                     var d2;
 
@@ -329,13 +333,6 @@
 
                                                     });
 
-                                                    $('input:checkbox').change(function () {
-                                                        if ($(this).is(':checked')) {
-
-                                                        } else
-                                                        {
-
-                                                        }
-                                                    });
+                                                    
                                                 </script>
                                                 </html>
