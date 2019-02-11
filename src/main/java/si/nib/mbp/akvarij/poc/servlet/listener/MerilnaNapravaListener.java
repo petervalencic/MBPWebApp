@@ -129,7 +129,7 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 logger.log(Level.INFO, "Prevodnost: {0}", prevodnost);
 
                 //podatke zapišemo v bazo..
-                connection = dao.getDBConnection();
+                connection = dao.geConnection();
 
                 stmt = connection.prepareCall("insert into met_meritve (temp,sal,freq_cond,freq_temp,cond,dat_vno) values (?,?,?,?,?,?)");
                 stmt.setBigDecimal(1, new BigDecimal(temperatura));

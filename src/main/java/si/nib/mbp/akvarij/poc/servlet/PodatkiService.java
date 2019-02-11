@@ -40,7 +40,7 @@ public class PodatkiService {
         ResultSet rs = null;
 
         try {
-            connection = dao.getDBConnection();
+            connection = dao.geConnection();
 
             String sql;
             if (StringUtils.isNullOrEmpty(datumOd) || StringUtils.isNullOrEmpty(datumDo)) {

@@ -20,7 +20,7 @@ public final class DaoDbConnection {
     public DaoDbConnection() {
     }
 
-    public Connection getDBConnection() {
+    public Connection geConnection() {
         Connection result = null;
         try {
             Context initialContext = new InitialContext();
