@@ -100,7 +100,6 @@ public class PodatkiService extends DaoDbConnection {
 
     public String getPodatkiJson(@QueryParam("datumOd") String datumOd, @QueryParam("datumDo") String datumDo) {
         logger.log(Level.INFO, "Podatki service DatumOd; {0}", datumOd);
-        logger.log(Level.INFO, "Podatki service DatumDo: {0}", datumDo);
         Connection con = null;
         Statement st = null;
         ResultSet rs = null;
@@ -112,7 +111,7 @@ public class PodatkiService extends DaoDbConnection {
         try {
             con = this.getConnection();
             st = con.createStatement();
-            if (StringUtils.isNullOrEmpty(datumOd) & StringUtils.isNullOrEmpty(datumDo)) {
+            if (StringUtils.isNullOrEmpty(datumOd) || StringUtils.isNullOrEmpty(datumDo)) {
                 sql = "select temp,sal,dat_vno from met_meritve order by dat_vno desc limit 30";
             } else {
                 sql = "SELECT * FROM met_meritve WHERE  dat_vno BETWEEN '" + datumOd + "' AND '" + datumDo + "' order by dat_vno asc";
