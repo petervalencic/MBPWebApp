@@ -14,10 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,7 +49,7 @@ public class MerilnaNapravaListener implements ServletContextListener {
             urlNaslov = "http://localhost";
             logger.log(Level.SEVERE, "Cannot find Tomcat ENV variable '" + ENV_NAME + "'", e);
         }
-        logger.log(Level.INFO, "Arduino URL = '" + urlNaslov + "'");
+        logger.log(Level.INFO, "Arduino URL = ''{0}''", urlNaslov);
     }
 
     public String getUrlNaslov() {
@@ -140,35 +138,34 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
                 stmt.execute();
             } catch (ParserConfigurationException ex) {
-                Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             } catch (MalformedURLException ex) {
-                Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             } catch (SAXException ex) {
-                Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             } catch (XPathExpressionException ex) {
-                Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
-                Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             } finally {
                 if (stmt != null) {
                     try {
                         stmt.close();
                     } catch (SQLException ex) {
-                        Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.log(Level.SEVERE, null, ex);
                     }
                 }
 
                 if (connection != null) {
                     try {
-                        if (!connection.getAutoCommit())
-                        {
-                             connection.commit();
+                        if (!connection.getAutoCommit()) {
+                            connection.commit();
                         }
                         connection.close();
                     } catch (SQLException ex) {
-                        Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.log(Level.SEVERE, null, ex);
                     }
                 }
             }
