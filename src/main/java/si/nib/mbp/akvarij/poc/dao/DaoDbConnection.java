@@ -15,20 +15,18 @@ public final class DaoDbConnection {
 
     static final Logger logger = Logger.getLogger(DaoDbConnection.class.getName());
 
-    protected Connection connection = null;
-
     public DaoDbConnection() {
     }
 
     public Connection geConnection() {
-        Connection result = null;
+        Connection con = null;
         try {
             Context initialContext = new InitialContext();
             DataSource datasource = (DataSource) initialContext.lookup(DATASOURCE_CONTEXT);
             if (datasource != null) {
-                result = datasource.getConnection();
-                result.setAutoCommit(false);
-            } else {
+                con = datasource.getConnection();
+                con.setAutoCommit(false);
+               } else {
                 logger.log(Level.SEVERE, "Failed to lookup datasource.");
             }
         } catch (NamingException ex) {
@@ -36,6 +34,6 @@ public final class DaoDbConnection {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Cannot get connection: {0}", ex);
         }
-        return result;
+        return con;
     }
 }
