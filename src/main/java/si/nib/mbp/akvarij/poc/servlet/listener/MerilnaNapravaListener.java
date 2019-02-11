@@ -35,9 +35,11 @@ import si.nib.mbp.akvarij.poc.dao.DaoDbConnection;
 /**
  * @author Peter
  */
-public class MerilnaNapravaListener extends DaoDbConnection implements ServletContextListener {
+public class MerilnaNapravaListener implements ServletContextListener {
     final String TOMCAT_ENV_CONTEXT = "java:comp/env";
     final String ENV_NAME = "arduinoDataUrl";
+
+    private static final DaoDbConnection dao = new DaoDbConnection();
 
     private String urlNaslov = "";
 
@@ -63,12 +65,6 @@ public class MerilnaNapravaListener extends DaoDbConnection implements ServletCo
         logger.log(Level.INFO, "MerilnaNapravaListener je uničen..");
     }
 
-    private Connection getConnection() {
-        if (!connect()) {
-            logger.log(Level.WARNING, "Cannot get connection");
-        }
-        return connection;
-    }
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -85,8 +81,6 @@ public class MerilnaNapravaListener extends DaoDbConnection implements ServletCo
         DocumentBuilder db;
         Document doc;
         XPathFactory xpathFactory;
-        Connection con;
-        PreparedStatement stmt;
 
         @Override
         public void run() {
@@ -132,9 +126,10 @@ public class MerilnaNapravaListener extends DaoDbConnection implements ServletCo
                 logger.log(Level.INFO, "Prevodnost: {0}", prevodnost);
 
                 //podatke zapišemo v bazo..
-                con = getConnection();
 
-                stmt = con.prepareCall("insert into met_meritve (temp,sal,freq_cond,freq_temp,cond,dat_vno) values (?,?,?,?,?,?)");
+                Connection connection = dao.getConnection();
+                PreparedStatement stmt = null;
+                stmt = connection.prepareCall("insert into met_meritve (temp,sal,freq_cond,freq_temp,cond,dat_vno) values (?,?,?,?,?,?)");
                 stmt.setBigDecimal(1, new BigDecimal(temperatura));
                 stmt.setBigDecimal(2, new BigDecimal(slanost));
                 stmt.setBigDecimal(3, new BigDecimal(frekvencaPrevodnost));
@@ -143,9 +138,9 @@ public class MerilnaNapravaListener extends DaoDbConnection implements ServletCo
                 stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
                 stmt.execute();
                 stmt.close();
-                con.commit();
-                //con.close();
-
+                stmt = null;
+                connection.close();
+                connection = null;
             } catch (ParserConfigurationException ex) {
                 Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
             } catch (MalformedURLException ex) {
@@ -158,22 +153,6 @@ public class MerilnaNapravaListener extends DaoDbConnection implements ServletCo
                 Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                if (stmt != null) {
-                    try {
-                        stmt.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                if (con != null) {
-                    try {
-                        con.commit();
-                        con.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
             }
 
         }
