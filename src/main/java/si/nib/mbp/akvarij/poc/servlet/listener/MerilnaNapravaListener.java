@@ -137,17 +137,7 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 stmt.setBigDecimal(5, new BigDecimal(prevodnost));
                 stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
                 stmt.execute();
-            } catch (ParserConfigurationException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } catch (MalformedURLException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } catch (SAXException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } catch (XPathExpressionException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
+            } catch (ParserConfigurationException | IOException | SAXException | XPathExpressionException | SQLException ex) {
                 logger.log(Level.SEVERE, null, ex);
             } finally {
                 if (stmt != null) {
@@ -161,7 +151,10 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 if (connection != null) {
                     try {
                         if (!connection.getAutoCommit()) {
-                            connection.commit();
+                            try {
+                                connection.commit();
+                            } catch (Exception ex) {
+                            }
                         }
                         connection.close();
                     } catch (SQLException ex) {
