@@ -35,7 +35,7 @@
           "theme": "light",
 
           "dataLoader": {
-              "url": "./rest/podatki/tempslajson?datumOd=${formaBean.datumOd}:00&datumDo=${formaBean.datumDo}:00",
+              "url": "rest/podatki/tempslajson?datumOd=${formaBean.datumOd}:00&datumDo=${formaBean.datumDo}:00",
               "format": "json"
           },
           "valueAxes": [{
@@ -87,7 +87,7 @@
           "theme": "light",
 
           "dataLoader": {
-              "url": "./rest/podatki/tempslajson?datumOd=${formaBean.datumOd}:00&datumDo=${formaBean.datumDo}:00",
+              "url": "rest/podatki/tempslajson?datumOd=${formaBean.datumOd}:00&datumDo=${formaBean.datumDo}:00",
               "format": "json"
           },
           "valueAxes": [{
@@ -138,7 +138,7 @@
 </HEAD>
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<form id="form" action="./FormServlet" method="post">
+<form id="form" action="${pageContext.request.contextPath}/FormServlet" method="post">
   <table style="margin: 0 0 0 0;" border="0" cellpadding="0" cellspacing="0" width="100%">
 
     <tr height="50">

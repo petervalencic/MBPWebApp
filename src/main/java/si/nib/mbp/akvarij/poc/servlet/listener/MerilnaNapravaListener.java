@@ -32,18 +32,18 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import si.nib.mbp.akvarij.poc.dao.DaoDbConnection;
 
-/**
- * @author Peter
- */
 public class MerilnaNapravaListener implements ServletContextListener {
+
     final String TOMCAT_ENV_CONTEXT = "java:comp/env";
     final String ENV_NAME = "arduinoDataUrl";
+    final int INTERVAL = 10 * 60 * 1000;
 
-    private static final DaoDbConnection dao = new DaoDbConnection();
+    private final DaoDbConnection dao;
 
     private String urlNaslov = "";
 
     public MerilnaNapravaListener() {
+        this.dao = new DaoDbConnection();
         try {
             Context ctx = new InitialContext();
             urlNaslov = (String) ctx.lookup(TOMCAT_ENV_CONTEXT + "/" + ENV_NAME);  // from Tomcat's context.xml
@@ -65,13 +65,12 @@ public class MerilnaNapravaListener implements ServletContextListener {
         logger.log(Level.INFO, "MerilnaNapravaListener je uničen..");
     }
 
-
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         logger.log(Level.INFO, "MerilnaNapravaListener je inicializiran..");
         TimerTask vodTimer = new VodTimerTask();
         Timer timer = new Timer();
-        timer.schedule(vodTimer, 1000, (60 * 1000));
+        timer.schedule(vodTimer, 1000, INTERVAL);
 
     }
 
@@ -85,6 +84,9 @@ public class MerilnaNapravaListener implements ServletContextListener {
         @Override
         public void run() {
 
+            Connection connection = null;
+            PreparedStatement stmt = null;
+
             String temperatura;
             String slanost;
             String prevodnost;
@@ -93,6 +95,7 @@ public class MerilnaNapravaListener implements ServletContextListener {
 
             logger.log(Level.INFO, "Klic merilne naprave na IP:{0}", getUrlNaslov());
             try {
+
                 dbf = DocumentBuilderFactory.newInstance();
                 db = dbf.newDocumentBuilder();
                 doc = db.parse(new URL(getUrlNaslov()).openStream());
@@ -126,9 +129,8 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 logger.log(Level.INFO, "Prevodnost: {0}", prevodnost);
 
                 //podatke zapišemo v bazo..
+                connection = dao.getDBConnection();
 
-                Connection connection = dao.getConnection();
-                PreparedStatement stmt = null;
                 stmt = connection.prepareCall("insert into met_meritve (temp,sal,freq_cond,freq_temp,cond,dat_vno) values (?,?,?,?,?,?)");
                 stmt.setBigDecimal(1, new BigDecimal(temperatura));
                 stmt.setBigDecimal(2, new BigDecimal(slanost));
@@ -137,10 +139,11 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 stmt.setBigDecimal(5, new BigDecimal(prevodnost));
                 stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
                 stmt.execute();
-                stmt.close();
-                stmt = null;
-                connection.close();
-                connection = null;
+
+                if (connection.getAutoCommit() == true) {
+                    connection.commit();
+                }
+
             } catch (ParserConfigurationException ex) {
                 Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
             } catch (MalformedURLException ex) {
@@ -153,6 +156,22 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (stmt != null) {
+                    try {
+                        stmt.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(MerilnaNapravaListener.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
 
         }
