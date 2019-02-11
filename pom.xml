@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>si.nib.mbp</groupId>
-    <artifactId>MBPMerilnaNaprava</artifactId>
+    <artifactId>aquarium.monitor</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>MBPMerilnaNaprava</name>
+    <name>aquarium-monitor</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -20,6 +20,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.38</version>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -35,7 +36,6 @@
             <artifactId>joda-time</artifactId>
             <version>2.9.9</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -62,7 +62,6 @@
             <version>1.2</version>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
             <groupId>junit</groupId>
@@ -70,7 +69,6 @@
             <version>4.2</version>
             <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -87,6 +85,7 @@
     </dependencies>
 
     <build>
+            <finalName>aquarium-monitor</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
