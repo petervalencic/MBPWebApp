@@ -41,7 +41,6 @@ public class PodatkiService {
 
         try {
             connection = dao.geConnection();
-
             String sql;
             if (StringUtils.isNullOrEmpty(datumOd) || StringUtils.isNullOrEmpty(datumDo)) {
                 sql = "select temp,sal,dat_vno from met_meritve order by dat_vno desc limit 30";
@@ -59,6 +58,12 @@ public class PodatkiService {
                 pod.setSlanost(rs.getDouble("sal"));
                 podatki.add(pod);
             }
+            rs.close();
+            rs = null;
+            stmt.close();
+            stmt = null;
+            connection.close();
+            connection = null;
 
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
@@ -68,18 +73,21 @@ public class PodatkiService {
                     rs.close();
                 } catch (SQLException e) {
                 }
+                rs = null;
             }
             if (stmt != null) {
                 try {
                     stmt.close();
                 } catch (SQLException e) {
                 }
+                stmt = null;
             }
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
                 }
+                connection = null;
             }
         }
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();

@@ -17,7 +17,7 @@ public final class DaoDbConnection {
 
     public DaoDbConnection() {
     }
-
+ 
     public Connection geConnection() {
         Connection con = null;
         try {
@@ -26,11 +26,11 @@ public final class DaoDbConnection {
             if (datasource != null) {
                 con = datasource.getConnection();
                 con.setAutoCommit(false);
-               } else {
-                logger.log(Level.SEVERE, "Failed to lookup datasource.");
+            } else {
+                logger.log(Level.SEVERE, "Failed to lookup datasource. ({0})",DATASOURCE_CONTEXT);
             }
         } catch (NamingException ex) {
-            logger.log(Level.SEVERE, "Cannot get connection: ", ex);
+            logger.log(Level.SEVERE, "Cannot get connection: {0}", ex);
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Cannot get connection: {0}", ex);
         }
