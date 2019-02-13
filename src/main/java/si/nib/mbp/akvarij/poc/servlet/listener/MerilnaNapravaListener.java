@@ -140,14 +140,14 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 stmt.close();
                 stmt = null;
                 if (!connection.getAutoCommit()) {
-                            try {
-                                connection.commit();
-                            } catch (Exception ex) {
-                            }
-                        }
+                    try {
+                        connection.commit();
+                    } catch (Exception ex) {
+                    }
+                }
                 connection.close();
                 connection = null;
-                
+
             } catch (ParserConfigurationException | IOException | SAXException | XPathExpressionException | SQLException ex) {
                 logger.log(Level.SEVERE, null, ex);
             } finally {
