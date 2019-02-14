@@ -12,18 +12,17 @@ import javax.ws.rs.QueryParam;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 import si.nib.mbp.akvarij.poc.dao.DaoDbConnection;
 import si.nib.mbp.akvarij.poc.pojo.PodatkiJson;
 
 @Path("/podatki")
 public class PodatkiService {
-
-    private final DaoDbConnection dao;
-
     static final Logger logger = Logger.getLogger(PodatkiService.class.getName());
 
     public PodatkiService() {
-        this.dao = new DaoDbConnection();
+        
     }
 
     @GET
@@ -35,6 +34,7 @@ public class PodatkiService {
         logger.log(Level.INFO, "Podatki service DatumDo; {0}", datumDo);
 
         ArrayList<PodatkiJson> podatki = new ArrayList<PodatkiJson>();
+        DaoDbConnection dao = new DaoDbConnection();
         Connection connection = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

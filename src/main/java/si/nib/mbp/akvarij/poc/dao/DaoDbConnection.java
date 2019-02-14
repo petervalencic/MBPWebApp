@@ -25,7 +25,6 @@ public final class DaoDbConnection {
             DataSource datasource = (DataSource) initialContext.lookup(DATASOURCE_CONTEXT);
             if (datasource != null) {
                 con = datasource.getConnection();
-                con.setAutoCommit(false);
             } else {
                 logger.log(Level.SEVERE, "Failed to lookup datasource. ({0})",DATASOURCE_CONTEXT);
             }

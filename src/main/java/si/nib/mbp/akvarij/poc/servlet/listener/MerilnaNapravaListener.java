@@ -12,10 +12,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,13 +37,10 @@ public class MerilnaNapravaListener implements ServletContextListener {
     final String TOMCAT_ENV_CONTEXT = "java:comp/env";
     final String ENV_NAME = "arduinoDataUrl";
     final int INTERVAL = 10 * 60 * 1000;
-
-    private final DaoDbConnection dao;
-
     private String urlNaslov = "";
 
     public MerilnaNapravaListener() {
-        this.dao = new DaoDbConnection();
+        //this.dao = new DaoDbConnection();
         try {
             Context ctx = new InitialContext();
             urlNaslov = (String) ctx.lookup(TOMCAT_ENV_CONTEXT + "/" + ENV_NAME);  // from Tomcat's context.xml
@@ -81,10 +80,9 @@ public class MerilnaNapravaListener implements ServletContextListener {
 
         @Override
         public void run() {
-
+            
             Connection connection = null;
             PreparedStatement stmt = null;
-
             String temperatura;
             String slanost;
             String prevodnost;
@@ -127,8 +125,9 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 logger.log(Level.INFO, "Prevodnost: {0}", prevodnost);
 
                 //podatke zapišemo v bazo..
-                connection = dao.geConnection();
-
+                DaoDbConnection dao = new DaoDbConnection();
+                connection = dao.geConnection(); 
+                connection.setAutoCommit(true);
                 stmt = connection.prepareCall("insert into met_meritve (temp,sal,freq_cond,freq_temp,cond,dat_vno) values (?,?,?,?,?,?)");
                 stmt.setBigDecimal(1, new BigDecimal(temperatura));
                 stmt.setBigDecimal(2, new BigDecimal(slanost));
@@ -139,12 +138,6 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 stmt.execute();
                 stmt.close();
                 stmt = null;
-                if (!connection.getAutoCommit()) {
-                    try {
-                        connection.commit();
-                    } catch (Exception ex) {
-                    }
-                }
                 connection.close();
                 connection = null;
 
@@ -163,11 +156,11 @@ public class MerilnaNapravaListener implements ServletContextListener {
                 if (connection != null) {
                     try {
                         connection.close();
-                       
+
                     } catch (SQLException ex) {
                         logger.log(Level.SEVERE, null, ex);
                     }
-                     connection = null;
+                    connection = null;
                 }
             }
 
