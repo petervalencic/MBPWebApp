@@ -162,17 +162,12 @@ public class MerilnaNapravaListener implements ServletContextListener {
 
                 if (connection != null) {
                     try {
-                        if (!connection.getAutoCommit()) {
-                            try {
-                                connection.commit();
-                            } catch (Exception ex) {
-                            }
-                        }
                         connection.close();
-                        connection = null;
+                       
                     } catch (SQLException ex) {
                         logger.log(Level.SEVERE, null, ex);
                     }
+                     connection = null;
                 }
             }
 
