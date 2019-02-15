@@ -20,7 +20,6 @@ import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -95,6 +94,7 @@ public class MerilnaNapravaListener implements ServletContextListener {
 
     class CacheServisTask extends TimerTask {
 
+        @Override
         public void run() {
             logger.log(Level.INFO, "CacheServisTask start:{0}", getUrlNaslov());
             if (servletContext == null) {
@@ -104,7 +104,7 @@ public class MerilnaNapravaListener implements ServletContextListener {
             try {
                 podatki = preberiPodatkeURL(urlNaslov);
             } catch (Exception ex) {
-                podatki = "<xml></xml>";
+                podatki = "<xml><root><temp><value>---</value><freq>0</freq></temp><sal><value>---</value><freq>0</freq></sal><cond><value>---</value><freq>0</freq></cond></root></xml>";
             }
             servletContext.setAttribute("ARDUINO_DATA", podatki);
         }

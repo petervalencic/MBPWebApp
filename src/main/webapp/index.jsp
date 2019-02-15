@@ -29,31 +29,31 @@
         <script src="amcharts/plugins/export/export.min.js"></script>
         <link href="amcharts/plugins/export/export.css" rel="stylesheet" type="text/css"/>
 
+        <link rel="stylesheet" href="http://vjs.zencdn.net/7.0.0/video-js.css">
+        <link href="http://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet">
+        <script src="http://vjs.zencdn.net/7.4.1/video.js"></script>
+
         <style>
+            #video-container {
+                position: relative;
+            }
+
             #overlay {
-                position: absolute;
-                top: 95px;
-                color: #FFF;
-                text-align: center;
-                font-size: 20px;
+                position: absolute; 
+                top: 0;
                 background-color: rgba(153, 153, 153, 0.6);
-                width: 854px;
-                padding: 10px 0;
-                z-index: 2147483647;
+                color: #fff;
+                text-align: left;
+                font-size: 20px;
+                width: 220px;
+                z-index: 100;
+                pointer-events: none;
             }
 
-            #v {
+            #aquarium-video {
+                position: absolute;
+                top: 0;
                 z-index: 1;
-            }
-
-            #test
-            {
-                position: absolute;
-                top: 20px;
-                left: 20px;
-                z-index: 2;
-                font-size: 20px;
-                background-color: rgba(153, 153, 153, 0.6);
             }
         </style>
 
@@ -285,7 +285,7 @@
                                                                             <% } %>
                                                                             <% if (id.equalsIgnoreCase("2")) { %>
                                                                             <tr>
-                                                                                <td align="center">
+                                                                                <td >
                                                                                     <iframe
                                                                                         src="https://player.twitch.tv/?channel=peterv6i&muted=true"
                                                                                         height="506"
@@ -295,43 +295,56 @@
                                                                                         allowfullscreen="true">
                                                                                     </iframe>
                                                                                     <br>
-                                                                            <center><hr></center>
-                                                                                <iframe  id="displayframe" 
-                                                                                         width="900" 
-                                                                                         height="506" 
-                                                                                         src="https://video.arnes.si/portal/api/asset/embed/y2dhrFULTUbQVfg9WJ6W4PiP?autoplay=1"
-                                                                                         frameborder="0" 
-                                                                                         webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true">
+                                                                                   
+                                                                                    <hr>
 
-                                                                                </iframe>
-                                                                            
+                                                                                    <div id="video-container">
+                                                                                        <div id="overlay">T: <code id="overlay-data-temp">---</code>
+                                                                                            <br>
+                                                                                            S: <code id="overlay-data-sal">---</code>
+                                                                                            <br>
+                                                                                            C: <code id="overlay-data-con">---</code>
+                                                                                        </div>
+                                                                                        <video id="aquarium-video" class="video-js" width="900" height="506" autoplay muted
+                                                                                               poster="" data-setup='{}'>
+                                                                                            <source src="https://prenosi.arnes.si/8735-2019-2-14-4eb0/arnes/playlist.m3u8" type="application/x-mpegURL">
+                                                                                            <p class='vjs-no-js'>
+                                                                                                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                                                                                <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+                                                                                            </p>
+                                                                                        </video>
+                                                                                    </div>                                                                            
+
+
+
+
+                                                                                </td>
+                                                                            </tr>
+                                                                            <% } %>
+                                                                            <% if (id.equalsIgnoreCase("3")) { %>
+                                                                            <tr>
+                                                                                <td align="center">
+                                                                                    Spletna stran je namenjena prikazu izmerjenih podatkov temperature in slanosti.<br>
+                                                                                    Nastala je kot pripomoček za pregled podatkov in prikaz video vsebine<br>
+                                                                                    Za merjenje temperature se uporablja analogna sonda SeaBird Scientific model SBE-3 ter za merjenje
+                                                                                    prevodnosti - slanosti SeaBird Scientific SBE-4<br>
+                                                                                    Meritve se opravljajo s pomočjo mikrokrmilnika Arduino uno na katerega je nameščen izdelan modul, ki
+                                                                                    skrbi za pretvorbo analognega signala (frekvence) v digitalne impulze<br>
+                                                                                    Frekvenca se nato izmeri in preračuna v temperaturo, prevodnost ter slanost.<br>
+                                                                                    Za shranjevanje podatkov se uporablja podatkovna baza MySQL.<br>
+                                                                                    <p>
+                                                                                    </p>
+
+                                                                                </td>
+                                                                            </tr>
+                                                                            <% } %>
+                                                                        </table>
                                                                     </td>
                                                                 </tr>
-                                                                <% } %>
-                                                                <% if (id.equalsIgnoreCase("3")) { %>
-                                                                <tr>
-                                                                    <td align="center">
-                                                                        Spletna stran je namenjena prikazu izmerjenih podatkov temperature in slanosti.<br>
-                                                                        Nastala je kot pripomoček za pregled podatkov in prikaz video vsebine<br>
-                                                                        Za merjenje temperature se uporablja analogna sonda SeaBird Scientific model SBE-3 ter za merjenje
-                                                                        prevodnosti - slanosti SeaBird Scientific SBE-4<br>
-                                                                        Meritve se opravljajo s pomočjo mikrokrmilnika Arduino uno na katerega je nameščen izdelan modul, ki
-                                                                        skrbi za pretvorbo analognega signala (frekvence) v digitalne impulze<br>
-                                                                        Frekvenca se nato izmeri in preračuna v temperaturo, prevodnost ter slanost.<br>
-                                                                        Za shranjevanje podatkov se uporablja podatkovna baza MySQL.<br>
-                                                                        <p>
-                                                                        </p>
-
-                                                                    </td>
-                                                                </tr>
-                                                                <% } %>
+                                                            </tbody>
                                                         </table>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                                </table>
 
-                                                </td>
+                                                    </td>
                                                 </tr>
                                                 <% if (id.equalsIgnoreCase("1") | id.equalsIgnoreCase("null")) { %>
                                                 <% }%>
@@ -340,46 +353,58 @@
                                                 </body>
                                                 <script src="./build/jquery.datetimepicker.full.min.js"></script>
                                                 <script>
-                                                    
-                                                    
-                                                                        $.datetimepicker.setLocale('sl');
-                                                                        jQuery('#datumod').datetimepicker({
-                                                                            format: 'Y-m-d H:i'
-                                                                        });
-                                                                        jQuery('#datumdo').datetimepicker({
-                                                                            format: 'Y-m-d H:i'
-                                                                        });
-
-                                                                        var d1;
-                                                                        var d2;
 
 
-                                                                        //form submit funkcije
-                                                                        $("#form").submit(function (event) {
+                    $.datetimepicker.setLocale('sl');
+                    jQuery('#datumod').datetimepicker({
+                        format: 'Y-m-d H:i'
+                    });
+                    jQuery('#datumdo').datetimepicker({
+                        format: 'Y-m-d H:i'
+                    });
 
-                                                                            if ($("#datumod").val().length == 0) {
-                                                                                alert('Datum od ne sme biti prazen');
-                                                                                return false;
-                                                                            } else {
-                                                                                d1 = new Date($("#datumod").val());
-                                                                            }
-                                                                            ;
+<% if (id.equalsIgnoreCase("2")) { %>
+                    function UpdateData() {
+                        var url = "rest/podatki/getTCS";
+                        $.ajax(url)
+                                .done((data) => {
+                                    if (data === null){
+                                        return;
+                                    }
+                                    var temp = $(data).find("root>temp>value").text() + " °C";
+                                    var sal = $(data).find("root>sal>value").text() + " PSU";
+                                    var cond = $(data).find("root>sal>value").text() + " S/m";
+                                    $('#overlay-data-temp').text(temp);
+                                    $('#overlay-data-sal').text(sal);
+                                    $('#overlay-data-con').text(cond);
+                                })
+                                .fail((error) => {
+                                    console.log('error', error);
+                                })
+                                .always(() => {
+                                    console.log('DONE');
+                                });
+                    }
 
-                                                                            if ($("#datumdo").val().length == 0) {
-                                                                                alert('DatumDo ne sme biti prazen');
-                                                                                return false;
-                                                                            } else {
-                                                                                d2 = new Date($("#datumdo").val());
-                                                                            }
-                                                                            ;
+                    $(document).ready(function () {
+                        var player = videojs('aquarium-video');
+                        player.ready(function () {
+                            var promise = player.play();
 
-                                                                            if (d2.getTime() < d1.getTime()) {
-                                                                                alert('Datum do ne sme biti manjši od datuma od');
-                                                                                return false;
-                                                                            }
+                            if (promise !== undefined) {
+                                promise.then(function () {
+                                    // Autoplay started!
+                                    console.log('STARTED');
+                                }).catch(function (error) {
+                                    // Autoplay was prevented.
+                                    console.log('NOT STARTED', error.message);
+                                });
+                            }
+                        });
 
-                                                                        });
+                        setInterval(UpdateData, 2000);
+                    });
 
-   
+<% } %>
                                                 </script>
                                                 </html>

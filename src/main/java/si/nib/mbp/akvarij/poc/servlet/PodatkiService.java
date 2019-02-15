@@ -13,9 +13,10 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
+import javax.ws.rs.POST;
 import javax.ws.rs.core.Context;
 import si.nib.mbp.akvarij.poc.dao.DaoDbConnection;
-import si.nib.mbp.akvarij.poc.pojo.PodatkiJson;
+import si.nib.mbp.akvarij.poc.pojo.PodatkiDTO;
 
 @Path("/podatki")
 public class PodatkiService {
@@ -43,7 +44,7 @@ public class PodatkiService {
         logger.log(Level.INFO, "Podatki service DatumOd; {0}", datumOd);
         logger.log(Level.INFO, "Podatki service DatumDo; {0}", datumDo);
 
-        ArrayList<PodatkiJson> podatki = new ArrayList<PodatkiJson>();
+        ArrayList<PodatkiDTO> podatki = new ArrayList<PodatkiDTO>();
         DaoDbConnection dao = new DaoDbConnection();
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -62,7 +63,7 @@ public class PodatkiService {
             rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                PodatkiJson pod = new PodatkiJson();
+                PodatkiDTO pod = new PodatkiDTO();
                 pod.setDatum(new Date(rs.getTimestamp("dat_vno").getTime()));
                 pod.setTemperatura(rs.getDouble("temp"));
                 pod.setSlanost(rs.getDouble("sal"));
