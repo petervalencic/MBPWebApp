@@ -373,7 +373,7 @@
                                     }
                                     var temp = $(data).find("root>temp>value").text() + " °C";
                                     var sal = $(data).find("root>sal>value").text() + " PSU";
-                                    var cond = $(data).find("root>sal>value").text() + " S/m";
+                                    var cond = $(data).find("root>cond>value").text() + " S/m";
                                     $('#overlay-data-temp').text(temp);
                                     $('#overlay-data-sal').text(sal);
                                     $('#overlay-data-con').text(cond);
