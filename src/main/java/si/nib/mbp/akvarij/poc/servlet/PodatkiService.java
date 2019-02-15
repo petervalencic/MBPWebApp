@@ -12,17 +12,27 @@ import javax.ws.rs.QueryParam;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Resource;
-import javax.sql.DataSource;
+import javax.servlet.ServletContext;
+import javax.ws.rs.core.Context;
 import si.nib.mbp.akvarij.poc.dao.DaoDbConnection;
 import si.nib.mbp.akvarij.poc.pojo.PodatkiJson;
 
 @Path("/podatki")
 public class PodatkiService {
+
     static final Logger logger = Logger.getLogger(PodatkiService.class.getName());
 
-    public PodatkiService() {
-        
+    @Context
+    ServletContext servletContext;
+
+    @GET
+    @Path("/getTCS")
+    @Produces(MediaType.APPLICATION_XML)
+    public String getTCS() {
+        logger.log(Level.INFO, "getTCS :: start");
+        String retXml = (String) servletContext.getAttribute("ARDUINO_DATA");
+        logger.log(Level.INFO, "getTCS :: end");
+        return retXml;
     }
 
     @GET

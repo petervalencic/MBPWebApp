@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -15,6 +17,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.sql.DataSource;
@@ -37,6 +40,10 @@ public class MerilnaNapravaListener implements ServletContextListener {
     final String TOMCAT_ENV_CONTEXT = "java:comp/env";
     final String ENV_NAME = "arduinoDataUrl";
     final int INTERVAL = 10 * 60 * 1000;
+    final int INTERVAL_SERVIS = 10 * 1000;
+
+    ServletContext servletContext;
+
     private String urlNaslov = "";
 
     public MerilnaNapravaListener() {
@@ -65,13 +72,45 @@ public class MerilnaNapravaListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         logger.log(Level.INFO, "MerilnaNapravaListener je inicializiran..");
-        TimerTask vodTimer = new VodTimerTask();
+
+        servletContext = servletContextEvent.getServletContext();
+
+        TimerTask podatkiTimer = new ZapisPodatkovTimerTask();
         Timer timer = new Timer();
-        timer.schedule(vodTimer, 1000, INTERVAL);
+        timer.schedule(podatkiTimer, 1000, INTERVAL);
+
+        TimerTask cachePodatkiTimer = new CacheServisTask();
+        Timer timerCache = new Timer();
+        timerCache.schedule(cachePodatkiTimer, 1000, INTERVAL_SERVIS);
 
     }
 
-    class VodTimerTask extends TimerTask {
+    private String preberiPodatkeURL(String reqURL) throws IOException {
+        try (Scanner scanner = new Scanner(new URL(reqURL).openStream(),
+                StandardCharsets.UTF_8.toString())) {
+            scanner.useDelimiter("\\A");
+            return scanner.hasNext() ? scanner.next() : "";
+        }
+    }
+
+    class CacheServisTask extends TimerTask {
+
+        public void run() {
+            logger.log(Level.INFO, "CacheServisTask start:{0}", getUrlNaslov());
+            if (servletContext == null) {
+                return;
+            }
+            String podatki;
+            try {
+                podatki = preberiPodatkeURL(urlNaslov);
+            } catch (Exception ex) {
+                podatki = "<xml></xml>";
+            }
+            servletContext.setAttribute("ARDUINO_DATA", podatki);
+        }
+    }
+
+    class ZapisPodatkovTimerTask extends TimerTask {
 
         DocumentBuilderFactory dbf;
         DocumentBuilder db;
@@ -80,7 +119,7 @@ public class MerilnaNapravaListener implements ServletContextListener {
 
         @Override
         public void run() {
-            
+            logger.log(Level.INFO, "ZapisPodatkovTimerTask start");
             Connection connection = null;
             PreparedStatement stmt = null;
             String temperatura;
@@ -126,7 +165,7 @@ public class MerilnaNapravaListener implements ServletContextListener {
 
                 //podatke zapišemo v bazo..
                 DaoDbConnection dao = new DaoDbConnection();
-                connection = dao.geConnection(); 
+                connection = dao.geConnection();
                 connection.setAutoCommit(true);
                 stmt = connection.prepareCall("insert into met_meritve (temp,sal,freq_cond,freq_temp,cond,dat_vno) values (?,?,?,?,?,?)");
                 stmt.setBigDecimal(1, new BigDecimal(temperatura));
