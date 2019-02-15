@@ -29,6 +29,34 @@
         <script src="amcharts/plugins/export/export.min.js"></script>
         <link href="amcharts/plugins/export/export.css" rel="stylesheet" type="text/css"/>
 
+        <style>
+            #overlay {
+                position: absolute;
+                top: 95px;
+                color: #FFF;
+                text-align: center;
+                font-size: 20px;
+                background-color: rgba(153, 153, 153, 0.6);
+                width: 854px;
+                padding: 10px 0;
+                z-index: 2147483647;
+            }
+
+            #v {
+                z-index: 1;
+            }
+
+            #test
+            {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                z-index: 2;
+                font-size: 20px;
+                background-color: rgba(153, 153, 153, 0.6);
+            }
+        </style>
+
         <script>
             var chart1 = AmCharts.makeChart("chartdiv", {
                 "type": "serial",
@@ -260,40 +288,50 @@
                                                                                 <td align="center">
                                                                                     <iframe
                                                                                         src="https://player.twitch.tv/?channel=peterv6i&muted=true"
-                                                                                        height="720"
-                                                                                        width="1280"
+                                                                                        height="506"
+                                                                                        width="900"
                                                                                         frameborder="0"
                                                                                         scrolling="no"
                                                                                         allowfullscreen="true">
                                                                                     </iframe>
+                                                                                    <br><br>
+                                                                            <center><h2>Prikaz podvodnega dogajanja iz strežnika ARNES</h2></center>
+                                                                                <iframe  id="displayframe" 
+                                                                                         width="900" 
+                                                                                         height="506" 
+                                                                                         src="https://video.arnes.si/portal/api/asset/embed/y2dhrFULTUbQVfg9WJ6W4PiP?autoplay=1"
+                                                                                         frameborder="0" 
+                                                                                         webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true">
 
-                                                                                </td>
-                                                                            </tr>
-                                                                            <% } %>
-                                                                            <% if (id.equalsIgnoreCase("3")) { %>
-                                                                            <tr>
-                                                                                <td align="center">
-                                                                                    Spletna stran je namenjena prikazu izmerjenih podatkov temperature in slanosti.<br>
-                                                                                    Nastala je kot pripomoček za pregled podatkov in prikaz video vsebine<br>
-                                                                                    Za merjenje temperature se uporablja analogna sonda SeaBird Scientific model SBE-3 ter za merjenje
-                                                                                    prevodnosti - slanosti SeaBird Scientific SBE-4<br>
-                                                                                    Meritve se opravljajo s pomočjo mikrokrmilnika Arduino uno na katerega je nameščen izdelan modul, ki
-                                                                                    skrbi za pretvorbo analognega signala (frekvence) v digitalne impulze<br>
-                                                                                    Frekvenca se nato izmeri in preračuna v temperaturo, prevodnost ter slanost.<br>
-                                                                                    Za shranjevanje podatkov se uporablja podatkovna baza MySQL.<br>
-                                                                                    <p>
-                                                                                    </p>
-
-                                                                                </td>
-                                                                            </tr>
-                                                                            <% } %>
-                                                                        </table>
+                                                                                </iframe>
+                                                                            
                                                                     </td>
                                                                 </tr>
-                                                            </tbody>
-                                                        </table>
+                                                                <% } %>
+                                                                <% if (id.equalsIgnoreCase("3")) { %>
+                                                                <tr>
+                                                                    <td align="center">
+                                                                        Spletna stran je namenjena prikazu izmerjenih podatkov temperature in slanosti.<br>
+                                                                        Nastala je kot pripomoček za pregled podatkov in prikaz video vsebine<br>
+                                                                        Za merjenje temperature se uporablja analogna sonda SeaBird Scientific model SBE-3 ter za merjenje
+                                                                        prevodnosti - slanosti SeaBird Scientific SBE-4<br>
+                                                                        Meritve se opravljajo s pomočjo mikrokrmilnika Arduino uno na katerega je nameščen izdelan modul, ki
+                                                                        skrbi za pretvorbo analognega signala (frekvence) v digitalne impulze<br>
+                                                                        Frekvenca se nato izmeri in preračuna v temperaturo, prevodnost ter slanost.<br>
+                                                                        Za shranjevanje podatkov se uporablja podatkovna baza MySQL.<br>
+                                                                        <p>
+                                                                        </p>
 
+                                                                    </td>
+                                                                </tr>
+                                                                <% } %>
+                                                        </table>
                                                     </td>
+                                                </tr>
+                                                </tbody>
+                                                </table>
+
+                                                </td>
                                                 </tr>
                                                 <% if (id.equalsIgnoreCase("1") | id.equalsIgnoreCase("null")) { %>
                                                 <% }%>
@@ -302,44 +340,46 @@
                                                 </body>
                                                 <script src="./build/jquery.datetimepicker.full.min.js"></script>
                                                 <script>
-                                                                $.datetimepicker.setLocale('sl');
-                                                                jQuery('#datumod').datetimepicker({
-                                                                    format: 'Y-m-d H:i'
-                                                                });
-                                                                jQuery('#datumdo').datetimepicker({
-                                                                    format: 'Y-m-d H:i'
-                                                                });
+                                                    
+                                                    
+                                                                        $.datetimepicker.setLocale('sl');
+                                                                        jQuery('#datumod').datetimepicker({
+                                                                            format: 'Y-m-d H:i'
+                                                                        });
+                                                                        jQuery('#datumdo').datetimepicker({
+                                                                            format: 'Y-m-d H:i'
+                                                                        });
 
-                                                                var d1;
-                                                                var d2;
-
-
-                                                                //form submit funkcije
-                                                                $("#form").submit(function (event) {
-
-                                                                    if ($("#datumod").val().length == 0) {
-                                                                        alert('Datum od ne sme biti prazen');
-                                                                        return false;
-                                                                    } else {
-                                                                        d1 = new Date($("#datumod").val());
-                                                                    }
-                                                                    ;
-
-                                                                    if ($("#datumdo").val().length == 0) {
-                                                                        alert('DatumDo ne sme biti prazen');
-                                                                        return false;
-                                                                    } else {
-                                                                        d2 = new Date($("#datumdo").val());
-                                                                    }
-                                                                    ;
-
-                                                                    if (d2.getTime() < d1.getTime()) {
-                                                                        alert('Datum do ne sme biti manjši od datuma od');
-                                                                        return false;
-                                                                    }
-
-                                                                });
+                                                                        var d1;
+                                                                        var d2;
 
 
+                                                                        //form submit funkcije
+                                                                        $("#form").submit(function (event) {
+
+                                                                            if ($("#datumod").val().length == 0) {
+                                                                                alert('Datum od ne sme biti prazen');
+                                                                                return false;
+                                                                            } else {
+                                                                                d1 = new Date($("#datumod").val());
+                                                                            }
+                                                                            ;
+
+                                                                            if ($("#datumdo").val().length == 0) {
+                                                                                alert('DatumDo ne sme biti prazen');
+                                                                                return false;
+                                                                            } else {
+                                                                                d2 = new Date($("#datumdo").val());
+                                                                            }
+                                                                            ;
+
+                                                                            if (d2.getTime() < d1.getTime()) {
+                                                                                alert('Datum do ne sme biti manjši od datuma od');
+                                                                                return false;
+                                                                            }
+
+                                                                        });
+
+   
                                                 </script>
                                                 </html>
