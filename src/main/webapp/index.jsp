@@ -294,8 +294,8 @@
                                                                                         scrolling="no"
                                                                                         allowfullscreen="true">
                                                                                     </iframe>
-                                                                                    <br><br>
-                                                                            <center><h2>Prikaz podvodnega dogajanja iz strežnika ARNES</h2></center>
+                                                                                    <br>
+                                                                            <center><hr></center>
                                                                                 <iframe  id="displayframe" 
                                                                                          width="900" 
                                                                                          height="506" 
