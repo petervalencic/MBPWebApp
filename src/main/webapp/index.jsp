@@ -10,7 +10,8 @@
         id = "1";
     }
 %>
-
+ <!DOCTYPE HTML>
+<html>
 <html>
     <HEAD>
         <TITLE>FPP/NIB MBP - prikaz meritev</TITLE>
